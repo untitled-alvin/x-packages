@@ -4,21 +4,21 @@ import 'package:universal_datastores/src/article_datastore/article_database.dart
 import 'package:universal_datastores/src/article_datastore/article_datastore_drift.dart';
 
 void main() {
-  const ownerId = '';
-
-  late DriftArticlesDatastore datastore;
-  late ArticleDatabase database;
-
-  setUp(() async {
-    database = ArticleDatabase(NativeDatabase.memory());
-    datastore = DriftArticlesDatastore(database: database);
-  });
-
-  tearDown(() async {
-    await database.close();
-  });
-
   group('DriftArticlesDatastoreV2', () {
+    const ownerId = '';
+
+    late DriftArticlesDatastore datastore;
+    late ArticleDatabase database;
+
+    setUp(() async {
+      database = ArticleDatabase(NativeDatabase.memory());
+      datastore = DriftArticlesDatastore(database: database);
+    });
+
+    tearDown(() async {
+      await database.close();
+    });
+
     // Write tests for the countArticles method
 
     group('countArticles', () {
@@ -33,7 +33,7 @@ void main() {
 
       test('returns correct count for query params  ', () async {
         // Arrange
-        final articles = [
+        final articles = <Article>[
           Article(
             guid: '1',
             title: 'Title 1',
@@ -80,6 +80,7 @@ void main() {
             guid: '1',
             title: 'Title 1',
             content: 'Content 1',
+            sourceId: 'source1',
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
             ownerId: ownerId,
@@ -89,6 +90,7 @@ void main() {
             guid: '2',
             title: 'Title 2',
             content: 'Content 2',
+            sourceId: 'source2',
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
             ownerId: ownerId,

@@ -28,52 +28,68 @@ class DriftArticlesDatastore extends ArticlesDatastore {
     final query = database.select(database.articles);
 
     if (params is ArticleQueryParams) {
-      if (params.hasValidSources) {
-        final sourceList = params.sources!.split(',');
-        query.where((tbl) => tbl.sourceId.isIn(sourceList));
-      }
-
-      if (params.hasValidQuery) {
-        final lowerCaseQuery = '%${params.query!.toLowerCase()}%';
-        query.where(
-          (tbl) {
-            return tbl.content.lower().like(lowerCaseQuery) |
-                tbl.title.lower().like(lowerCaseQuery);
-          },
-        );
-      }
-
-      query.orderBy([
-        (t) => switch (params.sortBy) {
-          ArticleSortOptions.data => OrderingTerm(expression: t.content),
-          ArticleSortOptions.id => OrderingTerm(expression: t.guid),
-          ArticleSortOptions.updatedAt => OrderingTerm(expression: t.updatedAt),
-          ArticleSortOptions.updatedAtDesc => OrderingTerm(
-            expression: t.updatedAt,
-            mode: OrderingMode.desc,
-          ),
-          ArticleSortOptions.createdAt => OrderingTerm(expression: t.createdAt),
-          ArticleSortOptions.createdAtDesc => OrderingTerm(
-            expression: t.createdAt,
-            mode: OrderingMode.desc,
-          ),
-          _ => OrderingTerm(expression: t.createdAt),
-        },
-      ]);
+      _applySourceFilter(query, params);
+      _applyTextSearch(query, params);
+      _applySorting(query, params);
     }
 
     return query;
   }
 
+  void _applySourceFilter(
+    SimpleSelectStatement<$ArticlesTable, ArticleData> query,
+    ArticleQueryParams params,
+  ) {
+    if (params.hasValidSources) {
+      final sourceList = params.sources!.split(',');
+      query.where((tbl) => tbl.sourceId.isIn(sourceList));
+    }
+  }
+
+  void _applyTextSearch(
+    SimpleSelectStatement<$ArticlesTable, ArticleData> query,
+    ArticleQueryParams params,
+  ) {
+    if (params.hasValidQuery) {
+      final lowerCaseQuery = '%${params.query!.toLowerCase()}%';
+      query.where(
+        (tbl) {
+          return tbl.content.lower().like(lowerCaseQuery) |
+              tbl.title.lower().like(lowerCaseQuery);
+        },
+      );
+    }
+  }
+
+  void _applySorting(
+    SimpleSelectStatement<$ArticlesTable, ArticleData> query,
+    ArticleQueryParams params,
+  ) {
+    query.orderBy([
+      (t) => switch (params.sortBy) {
+        ArticleSortOptions.data => OrderingTerm(expression: t.content),
+        ArticleSortOptions.id => OrderingTerm(expression: t.guid),
+        ArticleSortOptions.updatedAt => OrderingTerm(expression: t.updatedAt),
+        ArticleSortOptions.updatedAtDesc => OrderingTerm(
+          expression: t.updatedAt,
+          mode: OrderingMode.desc,
+        ),
+        ArticleSortOptions.createdAt => OrderingTerm(expression: t.createdAt),
+        ArticleSortOptions.createdAtDesc => OrderingTerm(
+          expression: t.createdAt,
+          mode: OrderingMode.desc,
+        ),
+        _ => OrderingTerm(expression: t.createdAt),
+      },
+    ]);
+  }
+
   /// Counts the total number of articles based on the provided query parameters.
   Future<int> countArticles(QueryParams params) async {
+    final query = database.select(database.articles);
     if (params is ArticleQueryParams) {
-      if (params.hasValidSources) {
-        final sourceList = params.sources!.split(',');
-        return database.articles
-            .count(where: (tbl) => tbl.sourceId.isIn(sourceList))
-            .getSingle();
-      }
+      _applySourceFilter(query, params);
+      return query.get().then((value) => value.length);
     }
 
     return database.articles.count().getSingle();
@@ -82,16 +98,12 @@ class DriftArticlesDatastore extends ArticlesDatastore {
   /// Searches for items that match the given query.
   @override
   Future<OffsetLimitPagination<Article>> search(QueryParams params) async {
-    final offset = params.offset ?? 0;
-    final limit = params.limit;
-
-    final query = params is ArticleQueryParams
-        ? _buildQuery(params)
-        : database.select(database.articles);
-
+    final query = _buildQuery(params);
     final total = await countArticles(params);
+    final offset = params.offset ?? 0;
+    final limit = params.limit ?? total;
 
-    query.limit(limit ?? total, offset: offset);
+    query.limit(limit, offset: offset);
 
     final articles = await query.get();
 
@@ -99,7 +111,7 @@ class DriftArticlesDatastore extends ArticlesDatastore {
       data: articles.map((e) => e.toModel()).toList(),
       total: total,
       offset: offset,
-      limit: limit ?? total,
+      limit: limit,
     );
   }
 
@@ -108,10 +120,9 @@ class DriftArticlesDatastore extends ArticlesDatastore {
     final article = await get(id);
     if (article == null) {
       throw DatastoreException.notFound('Article with id $id not found');
-    } else {
-      database.delete(database.articles).where((tbl) => tbl.guid.equals(id));
-      return article;
     }
+    database.delete(database.articles).where((tbl) => tbl.guid.equals(id));
+    return article;
   }
 
   @override
@@ -120,8 +131,6 @@ class DriftArticlesDatastore extends ArticlesDatastore {
       ..where((tbl) => tbl.guid.equals(id));
     final data = await query.getSingleOrNull();
     return data?.toModel();
-    // data!.toJson();
-    // return query.getSingleOrNull();
   }
 
   @override
@@ -141,14 +150,14 @@ class DriftArticlesDatastore extends ArticlesDatastore {
 
   @override
   Future<void> putAll(List<Article> objects) async {
-    if (objects.isNotEmpty) {
-      await database.batch((batch) {
-        batch.insertAll(
-          database.articles,
-          objects.map((e) => e.toCompanion()).toList(),
-        );
-      });
-    }
+    if (objects.isEmpty) return;
+
+    await database.batch((batch) {
+      batch.insertAll(
+        database.articles,
+        objects.map((e) => e.toCompanion()).toList(),
+      );
+    });
   }
 }
 
@@ -156,7 +165,7 @@ extension on Source {
   /// Converts the Source object to a Drift-compatible SourcesCompanion object.
   SourcesCompanion toCompanion() {
     return SourcesCompanion.insert(
-      id: Value(id),
+      id: id,
       name: Value(name),
       url: Value(url),
       image: Value(image),
@@ -178,7 +187,7 @@ extension on Article {
       updatedAt: Value(updatedAt),
       modifiedId: Value(modifiedId),
       apiArticleId: Value(apiArticleId),
-      sourceId: Value(sourceId),
+      sourceId: sourceId,
       authorName: Value(authorName),
       title: Value(title),
       slug: Value(slug),
@@ -197,11 +206,25 @@ extension on Article {
 extension on ArticleData {
   /// Converts the Article object to a Drift-compatible ArticlesCompanion object.
   Article toModel() => Article(
-    guid: guid,
-    createdAt: createdAt,
-    ownerId: ownerId,
-  );
-  // Article toModel() => Article.fromJson(toJson());
+        guid: guid,
+        createdAt: createdAt,
+        ownerId: ownerId,
+        updatedAt: updatedAt,
+        modifiedId: modifiedId,
+        apiArticleId: apiArticleId,
+        sourceId: sourceId,
+        authorName: authorName,
+        title: title,
+        slug: slug,
+        description: description,
+        summary: summary,
+        content: content,
+        imageUrl: imageUrl,
+        videoUrl: videoUrl,
+        publishedAt: publishedAt,
+        ingestedAt: ingestedAt,
+        isFeatured: isFeatured,
+      );
 }
 
 extension on SourceData {

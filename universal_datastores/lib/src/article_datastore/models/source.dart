@@ -23,7 +23,7 @@ part 'source.g.dart';
 class Source {
   /// {@macro source}
   const Source({
-    this.id,
+    required this.id,
     this.name,
     this.url,
     this.image,
@@ -43,7 +43,7 @@ class Source {
   Map<String, dynamic> toJson() => _$SourceToJson(this);
 
   /// The source's id
-  final String? id;
+  final String id;
 
   /// The source's name
   final String? name;

@@ -18,7 +18,7 @@ class Article {
     this.apiArticleId,
     this.source,
     this.author,
-    this.sourceId,
+    required this.sourceId,
     this.authorName,
     this.title,
     this.slug,
@@ -73,7 +73,7 @@ class Article {
   final Author? author;
 
   /// The id of the source of the article
-  final String? sourceId;
+  final String sourceId;
 
   /// The name of the author of the article
   final String? authorName;

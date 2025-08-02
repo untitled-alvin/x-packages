@@ -16,7 +16,7 @@ class ArticleDatabase extends _$ArticleDatabase {
 
 @DataClassName('SourceData')
 class Sources extends Table {
-  TextColumn get id => text().nullable()();
+  TextColumn get id => text()();
   TextColumn get name => text().nullable()();
   TextColumn get url => text().nullable()();
   TextColumn get image => text().nullable()();
@@ -37,7 +37,7 @@ class Articles extends Table {
   TextColumn get modifiedId => text().nullable()();
   TextColumn get ownerId => text()();
   TextColumn get apiArticleId => text().nullable()();
-  TextColumn get sourceId => text().nullable().references(Sources, #id)();
+  TextColumn get sourceId => text().references(Sources, #id)();
   TextColumn get authorName => text().nullable()();
   TextColumn get title => text().nullable()();
   TextColumn get slug => text().nullable()();
@@ -50,14 +50,6 @@ class Articles extends Table {
   DateTimeColumn get ingestedAt => dateTime().nullable()();
   BoolColumn get isFeatured => boolean().withDefault(const Constant(true))();
 
-  // Column<Author> get author => customType<Author>().nullable()();
-
   @override
   Set<Column> get primaryKey => {guid};
 }
-
-// @DataClassName('Author', extending: Author)
-// class Authors extends Table {
-//   TextColumn get name => text().nullable()();
-//   TextColumn get image => text().nullable()();
-// }
