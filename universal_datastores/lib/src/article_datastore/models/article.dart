@@ -1,17 +1,13 @@
-import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:universal_datastores/src/article_datastore/author.dart';
-import 'package:universal_datastores/src/article_datastore/source.dart';
-import 'package:universal_datastores/src/base/base.dart' show Record;
+import 'package:universal_datastores/src/article_datastore/models/models.dart';
 
 part 'article.g.dart';
 
 /// {@template collection}
 /// Article model
 /// {@endtemplate}
-@Collection(accessor: 'articles')
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
-class Article implements Record {
+class Article {
   /// {@macro article}
   const Article({
     required this.guid,
@@ -22,6 +18,8 @@ class Article implements Record {
     this.apiArticleId,
     this.source,
     this.author,
+    this.sourceId,
+    this.authorName,
     this.title,
     this.slug,
     this.description,
@@ -41,74 +39,28 @@ class Article implements Record {
   factory Article.fromJson(Map<String, dynamic> json) =>
       _$ArticleFromJson(json);
 
-  /// Creates a new instance of Article with the current date and time
-  factory Article.now({
-    required String guid,
-    String ownerId = defaultOwnerId,
-    String? apiArticleId,
-    Source? source,
-    Author? author,
-    String? title,
-    String? slug,
-    String? description,
-    String? summary,
-    String? content,
-    String? imageUrl,
-    String? videoUrl,
-    DateTime? publishedAt,
-    DateTime? ingestedAt,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    bool isFeatured = false,
-  }) {
-    return Article(
-      guid: guid,
-      createdAt: createdAt ?? DateTime.now(),
-      ownerId: ownerId,
-      updatedAt: updatedAt,
-      // modifiedId: null,
-      apiArticleId: apiArticleId,
-      source: source,
-      author: author,
-      title: title,
-      slug: slug,
-      description: description,
-      summary: summary,
-      content: content,
-      imageUrl: imageUrl,
-      videoUrl: videoUrl,
-      publishedAt: publishedAt,
-      ingestedAt: ingestedAt,
-      isFeatured: isFeatured,
-    );
-  }
-
   /// Converts current instance to a `Map<String, dynamic>`.
   Map<String, dynamic> toJson() => _$ArticleToJson(this);
 
   /// Unique identifier for the article
   static const String defaultOwnerId = 'system';
 
-  /// Unique identifier for the article
-  @Id()
-  String get id => guid;
-
   /// The unique identifier for the article
-  @override
+
   final String guid;
 
   /// The date and time when the article was created
-  @override
+
   final DateTime createdAt;
 
   /// The date and time when the article was last updated
-  @override
   final DateTime? updatedAt;
 
-  @override
+  /// The unique identifier of the article that was modified
   final String? modifiedId;
 
-  @override
+  /// The unique identifier of the owner of the article
+  /// This is typically the user or system that created the article
   final String ownerId;
 
   /// The unique identifier for the article in the API
@@ -119,6 +71,12 @@ class Article implements Record {
 
   /// The author of the article
   final Author? author;
+
+  /// The id of the source of the article
+  final String? sourceId;
+
+  /// The name of the author of the article
+  final String? authorName;
 
   /// The title of the article
   final String? title;

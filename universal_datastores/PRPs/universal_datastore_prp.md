@@ -156,10 +156,10 @@ class MockDataGenerator {
 }
 ```
 
-**Task 5: Specific ArticleDatastore Implementations for Article Domain**
+**Task 5: Specific Articlestore Implementations for Article Domain**
 
   - Create `Article` in `lib/src/datastore/article/` using `@[collection]` and `@[Id()]` annotations for Isar, and `@[JsonSerializable()]` for mock data generation.
-  - Implement `ArticleDatastore` in `lib/src/datastore/article/`.
+  - Implement `Articlestore` in `lib/src/datastore/article/`.
   - Add any domain-specific query methods or business logic to these specific datastores (e.g., `getArticles({ArticleQueryParams? params})`, ...).
 
 **Task 6: Documentation**
@@ -174,5 +174,5 @@ How we will verify the implementation is correct.
 
   - `test_isar_database()`: Verify Isar database operations, opens and closes without errors, and collections are accessible.
   - `test_mock_data_generator_from_json()`: Ensure mock data from a JSON string is correctly parsed and inserted into an Isar collection.
-  - `test_article_datastore_specific_queries()`: Test domain-specific methods on `ArticleDatastore` (e.g., filtering, custom queries).
+  - `test_article_datastore_specific_queries()`: Test domain-specific methods on `Articlestore` (e.g., filtering, custom queries).
   - `test_datastore_modularity_and_independence()`: Confirm that individual datastores can be initialized and used independently without affecting others.

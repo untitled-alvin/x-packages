@@ -1,4 +1,5 @@
-import 'package:universal_datastores/src/base/query_params.dart';
+import 'package:universal_datastores/universal_datastores.dart'
+    show QueryParams;
 
 /// Constants for sorting options
 enum ArticleSortOptions {
@@ -106,56 +107,3 @@ class ArticleQueryParams extends QueryParams {
   // /// Number of results to skip
   // final int? offset;
 }
-
-// /// Extension methods for [IsarQuery<Article>] to apply query parameters.
-// extension ArticleQueryExtension on IsarQuery<Article> {
-//   /// Applies query parameters to an IsarQuery.
-//   ///
-//   /// This method applies filtering, searching, and sorting based on the provided parameters.
-//   IsarQuery<Article> applyQueryParams(ArticleQueryParams params) {
-//     if (params.hasValidSources) {
-//       return _applySourceFilter(params.sources!);
-//     }
-
-//     if (params.hasValidQuery) {
-//       return _applyContentSearch(params.query!);
-//     }
-
-//     return _applySorting(params.sortBy);
-//   }
-
-//   /// Applies source-based filtering to the query.
-//   IsarQuery<Article> _applySourceFilter(String sources) {
-//     final sourcesList = sources.split(',');
-//     final builder = isar.articles.where();
-
-//     return sourcesList.length == 1
-//         ? builder.idEqualTo(sourcesList.first).build()
-//         : builder.idContains(sources).build();
-//   }
-
-//   /// Applies content-based search to the query.
-//   IsarQuery<Article> _applyContentSearch(String query) {
-//     final builder = isar.articles.where();
-//     return builder.contentContains(query, caseSensitive: false).build();
-//   }
-
-//   /// Applies sorting to the query based on the provided option.
-//   IsarQuery<Article> _applySorting(ArticleSortOptions? sortBy) {
-//     final builder = isar.articles.where();
-//     final sortBuilder = builder as QueryBuilder<Article, Article, QSortBy>;
-
-//     return switch (sortBy) {
-//       ArticleSortOptions.data =>
-//         sortBuilder.sortByContent(caseSensitive: false).build(),
-//       ArticleSortOptions.id => sortBuilder.sortById().build(),
-//       ArticleSortOptions.updatedAt => sortBuilder.sortByUpdatedAt().build(),
-//       ArticleSortOptions.updatedAtDesc =>
-//         sortBuilder.sortByUpdatedAtDesc().build(),
-//       ArticleSortOptions.createdAt => sortBuilder.sortByCreatedAt().build(),
-//       ArticleSortOptions.createdAtDesc =>
-//         sortBuilder.sortByCreatedAtDesc().build(),
-//       null => sortBuilder.sortByCreatedAt().build(),
-//     };
-//   }
-// }

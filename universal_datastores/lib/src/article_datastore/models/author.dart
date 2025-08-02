@@ -1,4 +1,3 @@
-import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'author.g.dart';
@@ -8,7 +7,6 @@ part 'author.g.dart';
 /// This class represents an author of news articles.
 /// {@endtemplate}
 @JsonSerializable()
-@embedded
 class Author {
   /// {@macro author}
   Author({this.name, this.image});

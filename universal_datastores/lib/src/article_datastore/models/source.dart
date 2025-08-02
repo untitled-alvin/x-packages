@@ -1,4 +1,3 @@
-import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'source.g.dart';
@@ -21,7 +20,6 @@ part 'source.g.dart';
 // ```
 /// {@endtemplate}
 @JsonSerializable()
-@embedded
 class Source {
   /// {@macro source}
   const Source({
