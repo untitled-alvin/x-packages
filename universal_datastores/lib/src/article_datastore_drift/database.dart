@@ -1,8 +1,6 @@
 // ignore_for_file: public_member_api_docs, document_ignores
 
-import 'package:drift/drift.dart';
-
-part 'article_database.g.dart';
+part of 'article_datastore_drift.dart';
 
 @DriftDatabase(tables: [Articles, Sources])
 class ArticleDatabase extends _$ArticleDatabase {

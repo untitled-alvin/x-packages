@@ -10,6 +10,7 @@ Article _$ArticleFromJson(Map<String, dynamic> json) => Article(
   guid: json['guid'] as String,
   createdAt: DateTime.parse(json['created_at'] as String),
   ownerId: json['owner_id'] as String,
+  sourceId: json['source_id'] as String,
   modifiedId: json['modified_id'] as String?,
   updatedAt: json['updated_at'] == null
       ? null
@@ -21,7 +22,6 @@ Article _$ArticleFromJson(Map<String, dynamic> json) => Article(
   author: json['author'] == null
       ? null
       : Author.fromJson(json['author'] as Map<String, dynamic>),
-  sourceId: json['source_id'] as String,
   authorName: json['author_name'] as String?,
   title: json['title'] as String?,
   slug: json['slug'] as String?,

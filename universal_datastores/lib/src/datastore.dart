@@ -95,8 +95,8 @@ abstract class Datastore<T> {
   /// Returns the updated object.
   Future<T> put(T object);
 
-  /// Deletes an object by its [id].
-  ///
-  /// Returns the deleted object.
-  Future<T> delete(String id);
+  // /// Deletes an object by its [id].
+  // ///
+  // /// Returns the deleted object.
+  // Future<T> deleteByPrimaryKey(String id);
 }

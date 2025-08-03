@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:universal_datastores/src/article_datastore/models/models.dart';
+import 'package:universal_datastores/src/article_datastore/models/models.dart'
+    show Author, Source;
 
 part 'article.g.dart';
 
@@ -13,12 +14,12 @@ class Article {
     required this.guid,
     required this.createdAt,
     required this.ownerId,
+    required this.sourceId,
     this.modifiedId,
     this.updatedAt,
     this.apiArticleId,
     this.source,
     this.author,
-    required this.sourceId,
     this.authorName,
     this.title,
     this.slug,

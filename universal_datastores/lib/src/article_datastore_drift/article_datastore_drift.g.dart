@@ -1,8 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'article_database.dart';
+part of 'article_datastore_drift.dart';
 
 // ignore_for_file: type=lint
+mixin _$ArticlesDataStoreMixin on DatabaseAccessor<ArticleDatabase> {
+  $SourcesTable get sources => attachedDatabase.sources;
+  $ArticlesTable get articles => attachedDatabase.articles;
+}
+
 class $SourcesTable extends Sources with TableInfo<$SourcesTable, SourceData> {
   @override
   final GeneratedDatabase attachedDatabase;

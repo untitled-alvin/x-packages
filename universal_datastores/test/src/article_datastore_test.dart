@@ -1,25 +1,25 @@
 import 'package:drift/native.dart';
 import 'package:test/test.dart';
-import 'package:universal_datastores/src/article_datastore/article_database.dart';
-import 'package:universal_datastores/src/article_datastore/article_datastore_drift.dart';
-import 'package:universal_datastores/universal_datastores.dart';
+import 'package:universal_datastores/src/article_datastore/article_datastore.dart';
+import 'package:universal_datastores/src/universal_datastores.dart'
+    show ArticleDatabase, ArticlesDataStore;
 
 void main() {
   const ownerId = '';
 
-  late DriftArticlesDatastore datastore;
-  late ArticleDatabase database;
+  late ArticlesDataStore datastore;
+  late ArticleDatabase db;
 
   setUp(() async {
-    database = ArticleDatabase(NativeDatabase.memory());
-    datastore = DriftArticlesDatastore(database: database);
+    db = ArticleDatabase(NativeDatabase.memory());
+    datastore = ArticlesDataStore(db);
   });
 
   tearDown(() async {
-    await database.close();
+    await db.close();
   });
 
-  group('ArticlesDatastore', () {
+  group('ArticlesDataStore', () {
     test('search returns all articles when no query is provided', () async {
       // Arrange
       final articles = [

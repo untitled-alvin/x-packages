@@ -1,40 +1,22 @@
+// ignore_for_file: public_member_api_docs, document_ignores
+
 import 'package:drift/drift.dart';
-import 'package:universal_datastores/src/article_datastore/article_database.dart';
-import 'package:universal_datastores/universal_datastores.dart';
+import 'package:universal_datastores/src/article_datastore/article_datastore.dart';
+import 'package:universal_datastores/src/datastore.dart';
 
-export 'package:universal_datastores/src/article_datastore/models/models.dart';
+part 'database.dart';
+part 'article_datastore_drift.g.dart';
 
-/// {@template news_store}
-/// Local data source that manages Article objects.
-///
-/// This class abstracts the data access layer in the Clean Architecture,
-/// serving as a local data source for Article entities.
-/// {@endtemplate}
-class DriftArticlesDatastore extends ArticlesDatastore {
-  /// {@macro news_store}
-  /// Creates a new [DriftArticlesDatastore] with the provided database instance.
-  ///
-  /// The [database] parameter is required and must be an instance of [AppDatabase].
-  DriftArticlesDatastore({
-    required this.database,
-  });
-
-  /// The database instance used for all operations.
-  final ArticleDatabase database;
-
-  SimpleSelectStatement<$ArticlesTable, ArticleData> _buildQuery(
-    QueryParams params,
-  ) {
-    final query = database.select(database.articles);
-
-    if (params is ArticleQueryParams) {
-      _applySourceFilter(query, params);
-      _applyTextSearch(query, params);
-      _applySorting(query, params);
-    }
-
-    return query;
-  }
+// the _TodosDaoMixin will be created by drift. It contains all the necessary
+// fields for the tables. The <MyDatabase> type annotation is the database class
+// that should use this dao.
+@DriftAccessor(tables: [Articles, Sources])
+class ArticlesDataStore extends DatabaseAccessor<ArticleDatabase>
+    with _$ArticlesDataStoreMixin
+    implements ArticlesDatastoreApi {
+  // this constructor is required so that the main database can create an instance
+  // of this object.
+  ArticlesDataStore(super.db);
 
   void _applySourceFilter(
     SimpleSelectStatement<$ArticlesTable, ArticleData> query,
@@ -84,20 +66,20 @@ class DriftArticlesDatastore extends ArticlesDatastore {
     ]);
   }
 
-  /// Counts the total number of articles based on the provided query parameters.
-  Future<int> countArticles(QueryParams params) async {
-    final query = database.select(database.articles);
-    if (params is ArticleQueryParams) {
-      _applySourceFilter(query, params);
-      return query.get().then((value) => value.length);
-    }
-
-    return database.articles.count().getSingle();
+  SimpleSelectStatement<$ArticlesTable, ArticleData> _buildQuery(
+    ArticleQueryParams params,
+  ) {
+    final query = db.select(db.articles);
+    _applySourceFilter(query, params);
+    _applyTextSearch(query, params);
+    _applySorting(query, params);
+    return query;
   }
 
-  /// Searches for items that match the given query.
   @override
-  Future<OffsetLimitPagination<Article>> search(QueryParams params) async {
+  Future<OffsetLimitPagination<Article>> search(
+    ArticleQueryParams params,
+  ) async {
     final query = _buildQuery(params);
     final total = await countArticles(params);
     final offset = params.offset ?? 0;
@@ -115,49 +97,49 @@ class DriftArticlesDatastore extends ArticlesDatastore {
     );
   }
 
-  @override
-  Future<Article> delete(String id) async {
-    final article = await get(id);
-    if (article == null) {
-      throw DatastoreException.notFound('Article with id $id not found');
+  /// Counts the total number of articles based on the provided query parameters.
+  Future<int> countArticles(QueryParams params) async {
+    final query = db.select(db.articles);
+    if (params is ArticleQueryParams) {
+      _applySourceFilter(query, params);
+      return query.get().then((value) => value.length);
     }
-    database.delete(database.articles).where((tbl) => tbl.guid.equals(id));
-    return article;
+
+    return db.articles.count().getSingle();
   }
 
   @override
   Future<Article?> get(String id) async {
-    final query = database.select(database.articles)
-      ..where((tbl) => tbl.guid.equals(id));
+    final query = db.select(db.articles)..where((tbl) => tbl.guid.equals(id));
     final data = await query.getSingleOrNull();
     return data?.toModel();
   }
 
   @override
-  Future<Article> put(Article object) async {
-    await database.batch((batch) {
-      if (object.source != null) {
-        batch.insertAllOnConflictUpdate(database.sources, [
-          object.source!.toCompanion(),
+  Future<Article> put(Article params) async {
+    await db.batch((batch) {
+      if (params.source != null) {
+        batch.insertAllOnConflictUpdate(db.sources, [
+          params.source!.toCompanion(),
         ]);
       }
 
-      batch.insert(database.articles, object.toCompanion());
+      batch.insert(db.articles, params.toCompanion());
     });
 
-    return object;
+    return params;
   }
 
   @override
-  Future<void> putAll(List<Article> objects) async {
-    if (objects.isEmpty) return;
-
-    await database.batch((batch) {
-      batch.insertAll(
-        database.articles,
-        objects.map((e) => e.toCompanion()).toList(),
-      );
-    });
+  Future<void> putAll(List<Article> params) async {
+    if (params.isNotEmpty) {
+      await db.batch((batch) {
+        batch.insertAll(
+          db.articles,
+          params.map((e) => e.toCompanion()).toList(),
+        );
+      });
+    }
   }
 }
 
@@ -203,31 +185,31 @@ extension on Article {
   }
 }
 
-extension on ArticleData {
-  /// Converts the Article object to a Drift-compatible ArticlesCompanion object.
-  Article toModel() => Article(
-        guid: guid,
-        createdAt: createdAt,
-        ownerId: ownerId,
-        updatedAt: updatedAt,
-        modifiedId: modifiedId,
-        apiArticleId: apiArticleId,
-        sourceId: sourceId,
-        authorName: authorName,
-        title: title,
-        slug: slug,
-        description: description,
-        summary: summary,
-        content: content,
-        imageUrl: imageUrl,
-        videoUrl: videoUrl,
-        publishedAt: publishedAt,
-        ingestedAt: ingestedAt,
-        isFeatured: isFeatured,
-      );
-}
-
 extension on SourceData {
   /// Converts the Article object to a Drift-compatible ArticlesCompanion object.
   Source toModel() => Source.fromJson(toJson());
+}
+
+extension on ArticleData {
+  /// Converts the Article object to a Drift-compatible ArticlesCompanion object.
+  Article toModel() => Article(
+    guid: guid,
+    createdAt: createdAt,
+    ownerId: ownerId,
+    updatedAt: updatedAt,
+    modifiedId: modifiedId,
+    apiArticleId: apiArticleId,
+    sourceId: sourceId,
+    authorName: authorName,
+    title: title,
+    slug: slug,
+    description: description,
+    summary: summary,
+    content: content,
+    imageUrl: imageUrl,
+    videoUrl: videoUrl,
+    publishedAt: publishedAt,
+    ingestedAt: ingestedAt,
+    isFeatured: isFeatured,
+  );
 }
