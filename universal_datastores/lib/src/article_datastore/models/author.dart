@@ -3,26 +3,37 @@ import 'package:json_annotation/json_annotation.dart';
 part 'author.g.dart';
 
 /// {@template author}
-/// Author model
-/// This class represents an author of news articles.
+/// A model representing the author of an article.
 /// {@endtemplate}
 @JsonSerializable()
 class Author {
   /// {@macro author}
-  Author({this.name, this.image});
+  Author({
+    required this.id,
+    required this.name,
+    this.url,
+    this.image,
+    this.description,
+  });
 
-  /// Creates an Author from JSON
-  /// [json] Map containing author data
-  /// Returns an Author object
-  /// Throws FormatException if the JSON is invalid
+  /// Creates an [Author] from a JSON object.
   factory Author.fromJson(Map<String, dynamic> json) => _$AuthorFromJson(json);
 
-  /// Converts current instance to a `Map<String, dynamic>`.
-  Map<String, dynamic> toJson() => _$AuthorToJson(this);
+  /// The unique identifier of the author.
+  final String id;
 
-  /// The author's name
-  final String? name;
+  /// The name of the author.
+  final String name;
 
-  /// The author's image URL
+  /// The URL of the author's website.
+  final String? url;
+
+  /// The URL of the author's image.
   final String? image;
+
+  /// The description of the author.
+  final String? description;
+
+  /// Converts the [Author] to a JSON object.
+  Map<String, dynamic> toJson() => _$AuthorToJson(this);
 }

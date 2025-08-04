@@ -8,56 +8,54 @@ part of 'article.dart';
 
 Article _$ArticleFromJson(Map<String, dynamic> json) => Article(
   guid: json['guid'] as String,
-  createdAt: DateTime.parse(json['created_at'] as String),
-  ownerId: json['owner_id'] as String,
-  sourceId: json['source_id'] as String,
-  modifiedId: json['modified_id'] as String?,
-  updatedAt: json['updated_at'] == null
-      ? null
-      : DateTime.parse(json['updated_at'] as String),
-  apiArticleId: json['api_article_id'] as String?,
-  source: json['source'] == null
-      ? null
-      : Source.fromJson(json['source'] as Map<String, dynamic>),
-  author: json['author'] == null
-      ? null
-      : Author.fromJson(json['author'] as Map<String, dynamic>),
-  authorName: json['author_name'] as String?,
+  ownerId: json['ownerId'] as String,
+  sourceId: json['sourceId'] as String?,
+  authorName: json['authorName'] as String?,
   title: json['title'] as String?,
   slug: json['slug'] as String?,
   description: json['description'] as String?,
-  summary: json['summary'] as String?,
   content: json['content'] as String?,
-  imageUrl: json['image_url'] as String?,
-  videoUrl: json['video_url'] as String?,
-  publishedAt: json['published_at'] == null
+  summary: json['summary'] as String?,
+  imageUrl: json['imageUrl'] as String?,
+  videoUrl: json['videoUrl'] as String?,
+  apiArticleId: json['apiArticleId'] as String?,
+  modifiedId: json['modifiedId'] as String?,
+  createdAt: json['createdAt'] == null
       ? null
-      : DateTime.parse(json['published_at'] as String),
-  ingestedAt: json['ingested_at'] == null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
       ? null
-      : DateTime.parse(json['ingested_at'] as String),
-  isFeatured: json['is_featured'] as bool? ?? false,
+      : DateTime.parse(json['updatedAt'] as String),
+  publishedAt: json['publishedAt'] == null
+      ? null
+      : DateTime.parse(json['publishedAt'] as String),
+  ingestedAt: json['ingestedAt'] == null
+      ? null
+      : DateTime.parse(json['ingestedAt'] as String),
+  isFeatured: json['isFeatured'] as bool? ?? false,
+  source: json['source'] == null
+      ? null
+      : Source.fromJson(json['source'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ArticleToJson(Article instance) => <String, dynamic>{
   'guid': instance.guid,
-  'created_at': instance.createdAt.toIso8601String(),
-  'updated_at': instance.updatedAt?.toIso8601String(),
-  'modified_id': instance.modifiedId,
-  'owner_id': instance.ownerId,
-  'api_article_id': instance.apiArticleId,
-  'source': instance.source?.toJson(),
-  'author': instance.author?.toJson(),
-  'source_id': instance.sourceId,
-  'author_name': instance.authorName,
+  'ownerId': instance.ownerId,
+  'sourceId': instance.sourceId,
+  'authorName': instance.authorName,
   'title': instance.title,
   'slug': instance.slug,
   'description': instance.description,
-  'summary': instance.summary,
   'content': instance.content,
-  'image_url': instance.imageUrl,
-  'video_url': instance.videoUrl,
-  'published_at': instance.publishedAt?.toIso8601String(),
-  'ingested_at': instance.ingestedAt?.toIso8601String(),
-  'is_featured': instance.isFeatured,
+  'summary': instance.summary,
+  'imageUrl': instance.imageUrl,
+  'videoUrl': instance.videoUrl,
+  'apiArticleId': instance.apiArticleId,
+  'modifiedId': instance.modifiedId,
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
+  'publishedAt': instance.publishedAt?.toIso8601String(),
+  'ingestedAt': instance.ingestedAt?.toIso8601String(),
+  'isFeatured': instance.isFeatured,
+  'source': instance.source,
 };

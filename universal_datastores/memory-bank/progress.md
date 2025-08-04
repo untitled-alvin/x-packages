@@ -1,19 +1,17 @@
 # Progress
 
 ## What Works
-- The basic project structure has been created.
-- The memory bank has been initialized.
+- The project has been successfully refactored to use Drift as the local database.
+- The `ArticleDatastore` has been implemented with basic CRUD operations.
+- The `README.md` and `projectbrief.md` have been updated.
+- The code has been documented following VGV standards.
 
 ## What's Left to Build
-- The core `UniversalDatastore` class and its associated interfaces.
-- The Isar integration for data persistence.
-- The mechanism for loading data from JSON files.
-- The "Article" datastore module.
-- Unit tests for all functionality.
+- Unit tests for the `ArticleDatastore`.
 - An example Flutter application demonstrating the package's usage.
 
 ## Current Status
-The project is in the initial setup phase. The foundational files and documentation are in place, but the core logic has not yet been implemented.
+The project is in a stable state. The core functionality is in place, but it still needs to be tested and demonstrated.
 
 ## Known Issues
 - None at this time.

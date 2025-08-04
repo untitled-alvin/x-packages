@@ -3,26 +3,12 @@ import 'package:json_annotation/json_annotation.dart';
 part 'source.g.dart';
 
 /// {@template source}
-/// Source model
-/// This class represents a source of news articles.
-/// It contains information about the source's ID, name, URL, and image.
-/// This constructor initializes the source with the provided values.
-/// If any of the values are null, they will be set to null in the object.
-/// This is useful for creating a source object from JSON or other data formats.
-// ```
-//"id": "abc-news",
-// "name": "ABC News",
-// "description": "Your trusted source for breaking news, analysis, exclusive interviews, headlines, and videos at ABCNews.com.",
-// "url": "https://abcnews.go.com",
-// "category": "general",
-// "language": "en",
-// "country": "us"
-// ```
+/// A model representing the source of an article.
 /// {@endtemplate}
 @JsonSerializable()
 class Source {
   /// {@macro source}
-  const Source({
+  Source({
     required this.id,
     this.name,
     this.url,
@@ -33,36 +19,33 @@ class Source {
     this.country,
   });
 
-  /// Creates a Source from JSON
-  /// [json] Map containing source data
-  /// Returns a Source object
-  /// Throws FormatException if the JSON is invalid
+  /// Creates a [Source] from a JSON object.
   factory Source.fromJson(Map<String, dynamic> json) => _$SourceFromJson(json);
 
-  /// Converts current instance to a `Map<String, dynamic>`.
-  Map<String, dynamic> toJson() => _$SourceToJson(this);
-
-  /// The source's id
+  /// The unique identifier of the source.
   final String id;
 
-  /// The source's name
+  /// The name of the source.
   final String? name;
 
-  /// The source's url
+  /// The URL of the source's website.
   final String? url;
 
-  /// The source's image
+  /// The URL of the source's image.
   final String? image;
 
-  /// The source's description
+  /// The description of the source.
   final String? description;
 
-  /// The source's category
+  /// The category of the source.
   final String? category;
 
-  /// The source's language
+  /// The language of the source.
   final String? language;
 
-  /// The source's country
+  /// The country of the source.
   final String? country;
+
+  /// Converts the [Source] to a JSON object.
+  Map<String, dynamic> toJson() => _$SourceToJson(this);
 }

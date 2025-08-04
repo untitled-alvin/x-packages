@@ -1,25 +1,22 @@
-import 'package:drift/native.dart';
 import 'package:test/test.dart';
-import 'package:universal_datastores/src/article_datastore/article_datastore.dart';
-import 'package:universal_datastores/src/universal_datastores.dart'
-    show ArticleDatabase, ArticlesDataStore;
+import 'package:universal_datastores/universal_datastores.dart';
 
 void main() {
   const ownerId = '';
 
-  late ArticlesDataStore datastore;
+  late ArticleDatastore datastore;
   late ArticleDatabase db;
 
   setUp(() async {
-    db = ArticleDatabase(NativeDatabase.memory());
-    datastore = ArticlesDataStore(db);
+    db = ArticleDatabase(isTest: true);
+    datastore = ArticleDatastore(database: db);
   });
 
   tearDown(() async {
     await db.close();
   });
 
-  group('ArticlesDataStore', () {
+  group('ArticleDatastore', () {
     test('search returns all articles when no query is provided', () async {
       // Arrange
       final articles = [
@@ -46,7 +43,7 @@ void main() {
 
       // Act
       final result = await datastore.search(
-        ArticleQueryParams.queryAll,
+        const ArticleQueryParams(),
       );
 
       // Assert
@@ -114,7 +111,7 @@ void main() {
       // Act
       final result = await datastore.search(
         const ArticleQueryParams(
-          sources: 'source1',
+          sources: ['source1'],
         ),
       );
 
@@ -131,8 +128,8 @@ void main() {
           title: 'Title 1',
           content: 'Content 1',
           sourceId: 'source1',
-          createdAt: DateTime(2023, 1, 1),
-          updatedAt: DateTime(2023, 1, 1),
+          createdAt: DateTime(2023),
+          updatedAt: DateTime(2023),
           ownerId: ownerId,
         ),
         Article(
@@ -149,11 +146,11 @@ void main() {
 
       // Act
       final result = await datastore.search(
-        ArticleQueryParams.queryAll,
+        const ArticleQueryParams(sortBy: ArticleSortOptions.createdAt),
       );
 
       // Assert
-      expect(result.data.first.guid, '2');
+      expect(result.data.first.guid, '1');
     });
 
     test('search returns paginated results', () async {

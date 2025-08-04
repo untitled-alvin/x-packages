@@ -1,109 +1,51 @@
-import 'package:universal_datastores/universal_datastores.dart'
-    show QueryParams;
+import 'package:universal_datastores/src/datastore.dart';
 
-/// Constants for sorting options
+/// The available sorting options for articles.
 enum ArticleSortOptions {
-  /// Sort by article ID
-  id,
-
-  /// Sort by article content
+  /// Sort by data.
   data,
 
-  /// Sort by creation date
-  createdAt,
+  /// Sort by ID.
+  id,
 
-  /// Sort by creation date in descending order
-  createdAtDesc,
-
-  /// Sort by update date
+  /// Sort by update date ascending.
   updatedAt,
 
-  /// Sort by update date in descending order
+  /// Sort by update date descending.
   updatedAtDesc,
+
+  /// Sort by creation date ascending.
+  createdAt,
+
+  /// Sort by creation date descending.
+  createdAtDesc,
 }
 
-/// Query parameters for article search
-///
-/// This class encapsulates all possible parameters for querying articles,
-/// making it easier to add new parameters without changing method signatures.
+/// {@template article_query_params}
+/// The query parameters for fetching articles.
+/// {@endtemplate}
 class ArticleQueryParams extends QueryParams {
-  /// Creates a new instance of [ArticleQueryParams]
-  ///
-  /// All parameters are optional and will be applied only if non-null
-
-  /// Parameters:
-  /// - [query]: Free text search across article content
-  /// - [queryInTitle]: Search only in article titles
-  /// - [sources]: Comma-separated list of source IDs
-  /// - [domains]: Comma-separated list of domains to include
-  /// - [excludeDomains]: Comma-separated list of domains to exclude
-  /// - [from]: Start date for date range filter
-  /// - [to]: End date for date range filter
-  /// - [language]: Filter by article language
-  /// - [sortBy]: Field to sort results by
-  /// - [preview]: Whether to return preview version of articles
-  /// - [limit]: Maximum number of results to return. If null, returns all matching records.
-  /// - [offset]: Number of results to skip///
+  /// {@macro article_query_params}
   const ArticleQueryParams({
-    this.query,
-    this.queryInTitle,
-    this.sources,
-    this.domains,
-    this.excludeDomains,
-    this.from,
-    this.to,
-    this.language,
-    this.sortBy = ArticleSortOptions.createdAtDesc,
-    this.preview = false,
     super.limit,
     super.offset,
+    this.query,
+    this.sources,
+    this.sortBy,
   });
 
-  /// Default query to select all articles
-  /// This query sorts articles by their creation date.
-  /// It can be used as a default query when no specific parameters are provided.
-  /// This is useful for fetching all articles in a sorted manner.
-  static const queryAll = ArticleQueryParams();
-
-  /// Checks if sources parameter is valid for filtering
-  bool get hasValidSources => sources != null && sources!.isNotEmpty;
-
-  /// Checks if query parameter is valid for content search
-  bool get hasValidQuery => query != null && query!.isNotEmpty;
-
-  /// Free text search across article content
+  /// The search query.
   final String? query;
 
-  /// Search only in article titles
-  final String? queryInTitle;
+  /// The sources to filter by.
+  final List<String>? sources;
 
-  /// Comma-separated list of source IDs
-  final String? sources;
-
-  /// Comma-separated list of domains to include
-  final String? domains;
-
-  /// Comma-separated list of domains to exclude
-  final String? excludeDomains;
-
-  /// Start date for date range filter
-  final String? from;
-
-  /// End date for date range filter
-  final String? to;
-
-  /// Filter by article language
-  final String? language;
-
-  /// Field to sort results by
+  /// The sorting option.
   final ArticleSortOptions? sortBy;
 
-  /// Whether to return preview version of articles
-  final bool preview;
+  /// Whether the query is valid.
+  bool get hasValidQuery => query != null && query!.isNotEmpty;
 
-  // /// Maximum number of results to return
-  // final int? limit;
-
-  // /// Number of results to skip
-  // final int? offset;
+  /// Whether the sources are valid.
+  bool get hasValidSources => sources != null && sources!.isNotEmpty;
 }

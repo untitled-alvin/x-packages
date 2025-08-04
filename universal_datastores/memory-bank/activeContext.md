@@ -1,12 +1,10 @@
 # Active Context
 
 ## Current Focus
-The current focus is on setting up the initial structure of the `universal_datastore` package. This includes creating the necessary files and directories, defining the public API, and implementing the core data generation and storage logic using Isar.
+The current focus is on refactoring the `universal_datastore` package to use Drift as the local database. This includes updating the dependencies, removing the old Isar-based code, and implementing the Drift database and datastore.
 
 ## Next Steps
-- Implement the `UniversalDatastore` class.
-- Implement the Isar integration for data storage.
-- Implement the JSON data loading mechanism.
-- Create the "Article" datastore as the first pre-built module.
-- Write unit tests for the core functionality.
+- Finalize the Drift implementation.
+- Update all documentation to reflect the change to Drift.
+- Write unit tests for the Drift-based datastore.
 - Create an example application to demonstrate usage.
