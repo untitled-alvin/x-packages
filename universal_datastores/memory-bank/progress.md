@@ -7,11 +7,10 @@
 - The code has been documented following VGV standards.
 
 ## What's Left to Build
-- Unit tests for the `ArticleDatastore`.
 - An example Flutter application demonstrating the package's usage.
 
 ## Current Status
-The project is in a stable state. The core functionality is in place, but it still needs to be tested and demonstrated.
+The project is in a stable state, but the unit tests for the `ArticleDatastore` are currently failing.
 
 ## Known Issues
-- None at this time.
+- The unit tests for `put`, `putAll`, and `put with source` in `article_datastore_test.dart` are failing due to issues with mocking `drift`'s `Batch` operations using `mocktail`. The `verify` calls are not matching the actual invocations.

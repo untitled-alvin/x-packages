@@ -12,6 +12,7 @@ class Article {
   Article({
     required this.guid,
     required this.ownerId,
+    required this.createdAt,
     this.sourceId,
     this.authorName,
     this.title,
@@ -23,7 +24,6 @@ class Article {
     this.videoUrl,
     this.apiArticleId,
     this.modifiedId,
-    this.createdAt,
     this.updatedAt,
     this.publishedAt,
     this.ingestedAt,
@@ -75,7 +75,7 @@ class Article {
   final String? modifiedId;
 
   /// The date and time when the article was created.
-  final DateTime? createdAt;
+  final DateTime createdAt;
 
   /// The date and time when the article was last updated.
   final DateTime? updatedAt;

@@ -4,7 +4,7 @@
 
   - **Feature Name:** Universal Datastore Dart Package
 
-  - **Objective:** To create a robust, reusable, and easily manageable Dart package (`universal_datastore`) for generating and consuming mock data using Isar, accelerating frontend development and improving testability.
+  - **Objective:** To create a robust, reusable, and easily manageable Dart package (`universal_datastore`) for generating and consuming mock data using Drift, accelerating frontend development and improving testability.
 
   - **Why:** This package solves the problem of UI development being blocked by unavailable backend APIs by providing a stable, controllable, and fast local data source. It enhances testability by offering consistent data for unit and integration tests and improves development flexibility by allowing easy simulation of various data states.
 
@@ -20,7 +20,7 @@ This feature will be considered complete when the following conditions are met. 
 
   - [x] The code adheres to the project standards defined in `GEMINI.md`.
 
-  - [x] The `universal_datastore` package successfully integrates with Isar for efficient data storage and retrieval.
+  - [x] The `universal_datastore` package successfully integrates with Drift for efficient data storage and retrieval.
 
   - [x] The package supports generating and populating datastores from external JSON mock data files.
 
@@ -48,9 +48,9 @@ This section contains all the information needed to implement the feature correc
 
       - **Purpose:** Contains up-to-date VGV documentation specifically relevant to LLMs and AI code editors, guiding the structure and principles of "The Rules" for AI code editors, which this package supports.
 
-  - **Resource:** [https://context7.com/isar/isar/llms.txt](https://context7.com/isar/isar/llms.txt)
+  - **Resource:** [https://drift.simonbinder.eu/docs/](https://drift.simonbinder.eu/docs/)
 
-      - **Purpose:** Provides comprehensive documentation for the Isar database, which is the core persistence layer for the `universal_datastore` package. This resource will be critical for correct Isar integration, schema definition, and data operations.
+      - **Purpose:** Provides comprehensive documentation for the Drift database, which is the core persistence layer for the `universal_datastore` package. This resource will be critical for correct Drift integration, schema definition, and data operations.
 
 ### 💻 Internal Codebase Patterns:
 
@@ -59,7 +59,7 @@ This section contains all the information needed to implement the feature correc
 
 ### ⚠️ Known Pitfalls:
 
-  - Ensuring graceful handling of Isar schema migrations if data models evolve post-deployment.
+  - Ensuring graceful handling of Drift schema migrations if data models evolve post-deployment.
   - Designing a highly reusable and intuitive API that balances flexibility with ease of use across various datastore types.
   - Optimizing performance for bulk mock data generation and retrieval, especially with large datasets.
   - Preventing naming collisions or architectural complexities as more specialized datastores are added to the package.
@@ -74,97 +74,48 @@ This is the step-by-step plan for building the feature.
 universal_datastore/
 ├── lib/
 │   ├── src/
-│   │   ├── database/                          (new: Isar collections/schemas for common datastores)
-│   │   │   ├── database_operations.dart    (new: An interface for standardized database operations.)
-│   │   │   ├── isar_database.dart          (new: Handles Isar instance, open/close, collection access, global datastore management,  operations handling with    metrics and logging.)
-│   │   │   └── record.dart                  (new: Base model for all Isar collections)
-│   │   ├── datastores/                      (new: Specific datastore implementations)
-│   │   │   ├── article/                      (new: For articles domain)
-│   │   │   │   ├── article.dart              (new: Isar schema for articles)
-│   │   │   │   └── article_datastore.dart    (new: Specific datastore for articles)
-│   │   │   ├── notification/                  (new: For notification domain)
-│   │   │   │   ├── notification.dart          (new: Isar schema for notifications)
-│   │   │   │   └── notification_datastore.dart     (new: Specific datastore for notifications)
-│   │   │   └── datastores.dart               (new: Barrel file for all datastores)
-│   │   ├── generators/                      (new: Mock data generation utilities)
-│   │   │   └── mock_data_generator.dart     (new: Logic to load JSON into Isar)
-│   │   ├── exception.dart                    (new: Exception handling for the package)
-│   │   └── universal_datastore.dart         (modified: Package entry point, exports)
-│   └── universal_datastore.dart              (modified: Top-level library export)
+│   │   ├── article_datastore/
+│   │   │   ├── article_datastore.dart
+│   │   │   ├── article_datastore_api.dart
+│   │   │   ├── database.dart
+│   │   │   ├── database.g.dart
+│   │   │   ├── tables.dart
+│   │   │   └── models/
+│   │   │       ├── article_query_params.dart
+│   │   │       ├── article.dart
+│   │   │       ├── article.g.dart
+│   │   │       ├── author.dart
+│   │   │       ├── author.g.dart
+│   │   │       ├── models.dart
+│   │   │       ├── source.dart
+│   │   │       └── source.g.dart
+│   │   └── datastore.dart
+│   └── universal_datastores.dart
 ├── test/
-│   ├── src/
-│   │   ├── datastores/
-│   │   │   ├── article/                      (new)
-│   │   │   │   ├── article_test.dart              (new)
-│   │   │   │   └── article_datastore_test.dart    (new)
-│   │   └── generators/                      (new)
-│   │       └── mock_data_generator_test.dart(new)
-│   └── universal_datastore_test.dart        (new)
-├── pubspec.yaml                             (modified)
-└── README.md                                (modified)
+│   └── src/
+│       └── article_datastore_test.dart
+├── pubspec.yaml
+└── README.md
 ```
 
 ### Task Breakdown:
 
-**Task 1: Project Setup & Core Dependencies**
+**Task 1: Project Setup & Core Components**
 
-  - Initialize a new Flutter package project: `very_good create dart_package universal_datastores`.
-  - Add necessary dependencies to `pubspec.yaml`: `isar`, `isar_flutter_libs`, `path_provider`, `json_annotation`, `json_serializable`, `build_runner`.
-  - Configure `build.yaml` for `json_serializable` and Isar code generation.
+  - Set up a new Dart package with the necessary dependencies, including `drift`, `path_provider`, `sqlite3_flutter_libs`, `json_annotation`, `drift_dev`, and `build_runner`.
+  - Define the core `Datastore` class and the `ArticlesDatastoreApi` interface.
+  - Implement the `Article` model and the `ArticleDatastore` class.
 
-**Task 2: Isar Service & Base Model Implementation**
+**Task 2: API Development and Testing**
 
-  - Define `Record` as a base abstract class or mixin for all Isar collections, potentially including a common `id`, `modified_id`,
-    `owner_id`, `created_at`, `updated_at` field.
-  - Define `Exception` have common error `internal_error`, `unexpected`, `internal_error`, `bad_request`, `not_found`, `invalid_argument`.
-  - Implement `IsarDatabase` in `lib/src/database/isar_database.dart` responsible for:
-      - Initializing and opening the Isar database.
-      - Managing database instances (e.g., singleton or dependency injection).
-      - Exposing access to registered Isar collections.
-      - define generic read, write, ..., operations with common metrics and logging, handle errors gracefully.
-      - Handling database closing.
+  - Implement the `ArticlesDatastoreApi` with methods for CRUD operations.
+  - Write unit tests for the `ArticleDatastore` and `ArticlesDatastoreApi`.
+  - Create an example Flutter application to demonstrate the package's usage.
 
-**Task 4: Mock Data Generation Logic**
+**Task 3: Documentation and Publishing**
 
-  - Implement `MockDataGenerator` in `lib/src/generators/mock_data_generator.dart`.
-  - This utility should:
-      - Take a JSON string or file path as input.
-      - Parse the JSON into a list of Dart objects (using `json_serializable` for model conversion).
-      - Use the `IsarDatabase`'s to bulk insert the parsed data into the relevant Isar collection.
-
-<!-- end list -->
-
-```dart
-// Pseudocode for MockDataGenerator
-class MockDataGenerator {
-  final Isar isar; // Injected Isar instance
-
-  MockDataGenerator(this.isar);
-
-  Future<void> populateCollection<T extends Record>(
-    String jsonString,
-    CollectionSchema<T> schema, // Isar schema for the collection
-    T Function(Map<String, dynamic> json) fromJson,
-  ) async {
-    final List<dynamic> jsonList = jsonDecode(jsonString);
-    final List<T> items = jsonList.map((json) => fromJson(json as Map<String, dynamic>)).toList();
-
-    await isar.writeTxn(() async {
-      await isar.collection<T>(schema.name).putAll(items);
-    });
-  }
-}
-```
-
-**Task 5: Specific Articlestore Implementations for Article Domain**
-
-  - Create `Article` in `lib/src/datastore/article/` using `@[collection]` and `@[Id()]` annotations for Isar, and `@[JsonSerializable()]` for mock data generation.
-  - Implement `Articlestore` in `lib/src/datastore/article/`.
-  - Add any domain-specific query methods or business logic to these specific datastores (e.g., `getArticles({ArticleQueryParams? params})`, ...).
-
-**Task 6: Documentation**
-
-  - Update `README.md` with package overview, installation instructions, and basic usage examples.
+  - Write comprehensive documentation for the package, including an example and a tutorial.
+  - Publish the package to pub.dev.
 
 ## 5\. Validation Plan
 
@@ -172,7 +123,7 @@ How we will verify the implementation is correct.
 
 ### Unit Tests:
 
-  - `test_isar_database()`: Verify Isar database operations, opens and closes without errors, and collections are accessible.
-  - `test_mock_data_generator_from_json()`: Ensure mock data from a JSON string is correctly parsed and inserted into an Isar collection.
-  - `test_article_datastore_specific_queries()`: Test domain-specific methods on `Articlestore` (e.g., filtering, custom queries).
-  - `test_datastore_modularity_and_independence()`: Confirm that individual datastores can be initialized and used independently without affecting others.
+  - `test_article_datastore_crud_operations()`: Verify basic CRUD operations (create, read, update, delete) on articles.
+  - `test_article_datastore_search_queries()`: Test various search queries, including filtering by source, text search, and sorting.
+  - `test_article_datastore_pagination()`: Ensure pagination works correctly with offset and limit.
+  - `test_article_datastore_error_handling()`: Verify error handling for cases like not found articles.

@@ -9,6 +9,7 @@ part of 'article.dart';
 Article _$ArticleFromJson(Map<String, dynamic> json) => Article(
   guid: json['guid'] as String,
   ownerId: json['ownerId'] as String,
+  createdAt: DateTime.parse(json['createdAt'] as String),
   sourceId: json['sourceId'] as String?,
   authorName: json['authorName'] as String?,
   title: json['title'] as String?,
@@ -20,9 +21,6 @@ Article _$ArticleFromJson(Map<String, dynamic> json) => Article(
   videoUrl: json['videoUrl'] as String?,
   apiArticleId: json['apiArticleId'] as String?,
   modifiedId: json['modifiedId'] as String?,
-  createdAt: json['createdAt'] == null
-      ? null
-      : DateTime.parse(json['createdAt'] as String),
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
@@ -52,7 +50,7 @@ Map<String, dynamic> _$ArticleToJson(Article instance) => <String, dynamic>{
   'videoUrl': instance.videoUrl,
   'apiArticleId': instance.apiArticleId,
   'modifiedId': instance.modifiedId,
-  'createdAt': instance.createdAt?.toIso8601String(),
+  'createdAt': instance.createdAt.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
   'publishedAt': instance.publishedAt?.toIso8601String(),
   'ingestedAt': instance.ingestedAt?.toIso8601String(),

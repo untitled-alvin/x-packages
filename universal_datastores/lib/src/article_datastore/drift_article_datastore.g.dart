@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'database.dart';
+part of 'drift_article_datastore.dart';
 
 // ignore_for_file: type=lint
 class $ArticlesTable extends Articles
@@ -153,9 +153,10 @@ class $ArticlesTable extends Articles
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
     'created_at',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
+    defaultValue: currentDate,
   );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
@@ -423,7 +424,7 @@ class $ArticlesTable extends Articles
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
-      ),
+      )!,
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -490,7 +491,7 @@ class ArticleData extends DataClass implements Insertable<ArticleData> {
   final String? modifiedId;
 
   /// The date and time when the article was created.
-  final DateTime? createdAt;
+  final DateTime createdAt;
 
   /// The date and time when the article was last updated.
   final DateTime? updatedAt;
@@ -517,7 +518,7 @@ class ArticleData extends DataClass implements Insertable<ArticleData> {
     this.videoUrl,
     this.apiArticleId,
     this.modifiedId,
-    this.createdAt,
+    required this.createdAt,
     this.updatedAt,
     this.publishedAt,
     this.ingestedAt,
@@ -561,9 +562,7 @@ class ArticleData extends DataClass implements Insertable<ArticleData> {
     if (!nullToAbsent || modifiedId != null) {
       map['modified_id'] = Variable<String>(modifiedId);
     }
-    if (!nullToAbsent || createdAt != null) {
-      map['created_at'] = Variable<DateTime>(createdAt);
-    }
+    map['created_at'] = Variable<DateTime>(createdAt);
     if (!nullToAbsent || updatedAt != null) {
       map['updated_at'] = Variable<DateTime>(updatedAt);
     }
@@ -612,9 +611,7 @@ class ArticleData extends DataClass implements Insertable<ArticleData> {
       modifiedId: modifiedId == null && nullToAbsent
           ? const Value.absent()
           : Value(modifiedId),
-      createdAt: createdAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(createdAt),
+      createdAt: Value(createdAt),
       updatedAt: updatedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(updatedAt),
@@ -647,7 +644,7 @@ class ArticleData extends DataClass implements Insertable<ArticleData> {
       videoUrl: serializer.fromJson<String?>(json['videoUrl']),
       apiArticleId: serializer.fromJson<String?>(json['apiArticleId']),
       modifiedId: serializer.fromJson<String?>(json['modifiedId']),
-      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
       publishedAt: serializer.fromJson<DateTime?>(json['publishedAt']),
       ingestedAt: serializer.fromJson<DateTime?>(json['ingestedAt']),
@@ -671,7 +668,7 @@ class ArticleData extends DataClass implements Insertable<ArticleData> {
       'videoUrl': serializer.toJson<String?>(videoUrl),
       'apiArticleId': serializer.toJson<String?>(apiArticleId),
       'modifiedId': serializer.toJson<String?>(modifiedId),
-      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
       'publishedAt': serializer.toJson<DateTime?>(publishedAt),
       'ingestedAt': serializer.toJson<DateTime?>(ingestedAt),
@@ -693,7 +690,7 @@ class ArticleData extends DataClass implements Insertable<ArticleData> {
     Value<String?> videoUrl = const Value.absent(),
     Value<String?> apiArticleId = const Value.absent(),
     Value<String?> modifiedId = const Value.absent(),
-    Value<DateTime?> createdAt = const Value.absent(),
+    DateTime? createdAt,
     Value<DateTime?> updatedAt = const Value.absent(),
     Value<DateTime?> publishedAt = const Value.absent(),
     Value<DateTime?> ingestedAt = const Value.absent(),
@@ -712,7 +709,7 @@ class ArticleData extends DataClass implements Insertable<ArticleData> {
     videoUrl: videoUrl.present ? videoUrl.value : this.videoUrl,
     apiArticleId: apiArticleId.present ? apiArticleId.value : this.apiArticleId,
     modifiedId: modifiedId.present ? modifiedId.value : this.modifiedId,
-    createdAt: createdAt.present ? createdAt.value : this.createdAt,
+    createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
     publishedAt: publishedAt.present ? publishedAt.value : this.publishedAt,
     ingestedAt: ingestedAt.present ? ingestedAt.value : this.ingestedAt,
@@ -839,7 +836,7 @@ class ArticlesCompanion extends UpdateCompanion<ArticleData> {
   final Value<String?> videoUrl;
   final Value<String?> apiArticleId;
   final Value<String?> modifiedId;
-  final Value<DateTime?> createdAt;
+  final Value<DateTime> createdAt;
   final Value<DateTime?> updatedAt;
   final Value<DateTime?> publishedAt;
   final Value<DateTime?> ingestedAt;
@@ -946,7 +943,7 @@ class ArticlesCompanion extends UpdateCompanion<ArticleData> {
     Value<String?>? videoUrl,
     Value<String?>? apiArticleId,
     Value<String?>? modifiedId,
-    Value<DateTime?>? createdAt,
+    Value<DateTime>? createdAt,
     Value<DateTime?>? updatedAt,
     Value<DateTime?>? publishedAt,
     Value<DateTime?>? ingestedAt,
@@ -1990,7 +1987,7 @@ typedef $$ArticlesTableCreateCompanionBuilder =
       Value<String?> videoUrl,
       Value<String?> apiArticleId,
       Value<String?> modifiedId,
-      Value<DateTime?> createdAt,
+      Value<DateTime> createdAt,
       Value<DateTime?> updatedAt,
       Value<DateTime?> publishedAt,
       Value<DateTime?> ingestedAt,
@@ -2012,7 +2009,7 @@ typedef $$ArticlesTableUpdateCompanionBuilder =
       Value<String?> videoUrl,
       Value<String?> apiArticleId,
       Value<String?> modifiedId,
-      Value<DateTime?> createdAt,
+      Value<DateTime> createdAt,
       Value<DateTime?> updatedAt,
       Value<DateTime?> publishedAt,
       Value<DateTime?> ingestedAt,
@@ -2342,7 +2339,7 @@ class $$ArticlesTableTableManager
                 Value<String?> videoUrl = const Value.absent(),
                 Value<String?> apiArticleId = const Value.absent(),
                 Value<String?> modifiedId = const Value.absent(),
-                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<DateTime?> publishedAt = const Value.absent(),
                 Value<DateTime?> ingestedAt = const Value.absent(),
@@ -2384,7 +2381,7 @@ class $$ArticlesTableTableManager
                 Value<String?> videoUrl = const Value.absent(),
                 Value<String?> apiArticleId = const Value.absent(),
                 Value<String?> modifiedId = const Value.absent(),
-                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<DateTime?> publishedAt = const Value.absent(),
                 Value<DateTime?> ingestedAt = const Value.absent(),

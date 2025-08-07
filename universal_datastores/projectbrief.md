@@ -1,43 +1,5 @@
-# Product Brief
 
-## 1\. Overview
-
-  - **Feature Name:** Universal Datastore Dart Package
-
-  - **Objective:** To create a robust, reusable, and easily manageable Dart package (`universal_datastore`) for generating and consuming mock data using local database(Isar), accelerating frontend development and improving testability.
-
-  - **Why:** This package solves the problem of UI development being blocked by unavailable backend APIs by providing a stable, controllable, and fast local data source. It enhances testability by offering consistent data for unit and integration tests and improves development flexibility by allowing easy simulation of various data states.
-
-## 2\. Success Criteria
-
-This feature will be considered complete when the following conditions are met. These must be specific and measurable.
-
-  - [x] The code runs without errors.
-
-  - [x] All new unit tests pass.
-
-  - [x] The feature meets all functional requirements described below.
-
-  # Product Brief
-
-## 1\. Overview
-
-  - **Feature Name:** Universal Datastore Dart Package
-
-  - **Objective:** To create a robust, reusable, and easily manageable Dart package (`universal_datastore`) for generating and consuming mock data using the local Drift database, accelerating frontend development and improving testability.
-
-  - **Why:** This package solves the problem of UI development being blocked by unavailable backend APIs by providing a stable, controllable, and fast local data source. It enhances testability by offering consistent data for unit and integration tests and improves development flexibility by allowing easy simulation of various data states.
-
-## 2\. Success Criteria
-
-This feature will be considered complete when the following conditions are met. These must be specific and measurable.
-
-  - [x] The code runs without errors.
-
-  - [x] All new unit tests pass.
-
-  - [x] The feature meets all functional requirements described below.
-
+  
   - [x] The code adheres to the project standards defined in `GEMINI.md`.
 
   - [x] The `universal_datastore` package successfully integrates with Drift for efficient data storage and retrieval.
@@ -96,7 +58,7 @@ This section describes the specific functionalities of the feature.
 
   - **Requirement:** The package must support the creation of datastores from external JSON files, with a clear and efficient mechanism for mapping JSON data to Drift objects.
 
-  - **Requirement:** The package must include a pre-built `ArticleDatastore` for managing "Article" data, complete with models (`Article`, `Author`, `Source`) and a dedicated API (`ArticleDatastoreApi`).
+  - **Requirement:** The package must include pre-built datastores for "Articles" and "Key-Value" pairs with their respective models and APIs.
 
   - **Requirement:** The `ArticleDatastoreApi` must offer methods for standard CRUD operations, such as `getArticleById`, `getAllArticles`, `createArticle`, `updateArticle`, and `deleteArticle`.
 
