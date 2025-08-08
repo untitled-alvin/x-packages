@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:news_repository/src/category.dart';
 import 'package:news_repository/src/models/models.dart';
 import 'package:news_repository/src/news_repository.dart';
@@ -17,11 +18,11 @@ class InMemoryNewsRepository implements NewsRepository {
   final List<Article> _articles = [];
 
   void _initialize() {
-    // Create mock users
+    // Create mock authors
     for (var i = 0; i < 5; i++) {
       _authors.add(
         Author(
-          id: 'user_$i',
+          id: 'author_$i',
           name: 'Author $i',
           imageUrl: 'https://picsum.photos/id/${i + 10}/200/200',
         ),
@@ -84,8 +85,14 @@ class InMemoryNewsRepository implements NewsRepository {
           articles.sort((a, b) => b.publishedAt.compareTo(a.publishedAt));
           break;
         case SortBy.popular:
-          // Placeholder for popularity logic
-          articles.sort((a, b) => b.id.compareTo(a.id));
+          articles.sort((a, b) {
+            if (b.isPremium && !a.isPremium) {
+              return 1;
+            } else if (!b.isPremium && a.isPremium) {
+              return -1;
+            }
+            return b.publishedAt.compareTo(a.publishedAt);
+          });
           break;
       }
     }
@@ -105,26 +112,34 @@ class InMemoryNewsRepository implements NewsRepository {
 
   @override
   Future<List<Article>> popularNews() async {
-    // Placeholder logic
-    return _articles.where((a) => a.isPremium).take(5).toList();
+    return getArticles(sortBy: SortBy.popular, limit: 5);
   }
 
   @override
   Future<List<Article>> topNews() async {
-    // Placeholder logic
     return _articles.where((a) => a.isBreaking).take(5).toList();
   }
 
   @override
   Future<List<Article>> trendingNews() async {
-    // Placeholder logic
-    return _articles.reversed.take(5).toList();
+    final latestArticles = await getArticles(sortBy: SortBy.latest, limit: 10);
+    final groupedByCategory =
+        groupBy<Article, Category>(latestArticles, (a) => a.category);
+
+    final trending = <Article>[];
+    for (final category in groupedByCategory.keys) {
+      final articles = groupedByCategory[category];
+      if (articles != null && articles.isNotEmpty) {
+        trending.add(articles.first);
+      }
+    }
+    return trending.take(5).toList();
   }
 
   @override
   Future<List<Article>> mostReadNews() async {
-    // Placeholder logic
-    return _articles.take(5).toList();
+    // Simulate most read by taking a specific slice of articles
+    return _articles.where((a) => int.parse(a.id.split('_').last) % 2 == 0).take(5).toList();
   }
 
   @override

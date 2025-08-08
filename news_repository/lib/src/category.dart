@@ -1,20 +1,77 @@
-/// The category of a news article.
-enum Category {
-  /// Articles about business.
-  business,
+import 'package:equatable/equatable.dart';
 
-  /// Articles about entertainment.
-  entertainment,
+/// {@template category}
+/// A news article category.
+/// {@endtemplate}
+class Category extends Equatable {
+  /// {@macro category}
+  const Category({
+    required this.name,
+    required this.label,
+    required this.emoji,
+  });
 
-  /// Articles about health.
-  health,
+  /// A list of all available categories.
+  static const List<Category> values = [
+    business,
+    entertainment,
+    health,
+    science,
+    sports,
+    technology,
+  ];
 
-  /// Articles about science.
-  science,
+  /// A category for business news.
+  static const business = Category(
+    name: 'business',
+    label: 'Business',
+    emoji: '💼',
+  );
 
-  /// Articles about sports.
-  sports,
+  /// A category for entertainment news.
+  static const entertainment = Category(
+    name: 'entertainment',
+    label: 'Entertainment',
+    emoji: '🎬',
+  );
 
-  /// Articles about technology.
-  technology,
+  /// A category for health news.
+  static const health = Category(
+    name: 'health',
+    label: 'Health',
+    emoji: '⚕️',
+  );
+
+  /// A category for science news.
+  static const science = Category(
+    name: 'science',
+    label: 'Science',
+    emoji: '🔬',
+  );
+
+  /// A category for sports news.
+  static const sports = Category(
+    name: 'sports',
+    label: 'Sports',
+    emoji: '⚽',
+  );
+
+  /// A category for technology news.
+  static const technology = Category(
+    name: 'technology',
+    label: 'Technology',
+    emoji: '💻',
+  );
+
+  /// The name of the category.
+  final String name;
+
+  /// The display label for the category.
+  final String label;
+
+  /// The emoji associated with the category.
+  final String emoji;
+
+  @override
+  List<Object> get props => [name, label, emoji];
 }
