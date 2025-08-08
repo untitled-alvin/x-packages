@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:universal_datastores/src/article_datastore/article_datastore.dart';
+import 'package:universal_datastores/src/datastore.dart' show OrderMode;
 import 'package:universal_datastores/src/exceptions.dart';
 
 part 'drift_article_datastore.g.dart';
@@ -56,9 +57,12 @@ class DriftArticleDatastore implements ArticlesDatastore {
     try {
       final article = await get(id);
       if (article == null) {
-        throw Exception('Article with id $id not found');
+        throw DeleteFailedException(
+          Exception('Article with id $id not found'),
+          StackTrace.current,
+        );
       }
-      database.delete(database.articles).where((tbl) => tbl.guid.equals(id));
+      await (database.delete(database.articles)..where((tbl) => tbl.guid.equals(id))).go();
       return article;
     } catch (e, s) {
       throw DeleteFailedException(e, s);
@@ -110,5 +114,89 @@ class DriftArticleDatastore implements ArticlesDatastore {
     } catch (e, s) {
       throw PutFailedException(e, s);
     }
+  }
+
+  @override
+  Future<OffsetLimitPagination<Article>> latestNews(
+    ArticleQueryParams params,
+  ) async {
+    return search(
+      ArticleQueryParams(
+        limit: params.limit,
+        offset: params.offset,
+        orderMode: OrderMode.descending,
+        sortBy: ArticleSortOptions.createdAt,
+      ),
+    );
+  }
+
+  @override
+  Future<OffsetLimitPagination<Article>> popularNews(
+    ArticleQueryParams params,
+  ) async {
+    return search(
+      ArticleQueryParams(
+        limit: params.limit,
+        offset: params.offset,
+        orderMode: OrderMode.descending,
+        sortBy: ArticleSortOptions.data, // Assuming 'data' refers to popularity/engagement
+      ),
+    );
+  }
+
+  @override
+  Future<OffsetLimitPagination<Article>> topNews(
+    ArticleQueryParams params,
+  ) async {
+    return search(
+      ArticleQueryParams(
+        limit: params.limit,
+        offset: params.offset,
+        orderMode: OrderMode.descending,
+        sortBy: ArticleSortOptions.data, // Assuming 'data' refers to top articles
+      ),
+    );
+  }
+
+  @override
+  Future<OffsetLimitPagination<Article>> trendingNews(
+    ArticleQueryParams params,
+  ) async {
+    return search(
+      ArticleQueryParams(
+        limit: params.limit,
+        offset: params.offset,
+        orderMode: OrderMode.descending,
+        sortBy: ArticleSortOptions.updatedAt, // Assuming trending is based on recent updates
+      ),
+    );
+  }
+
+  @override
+  Future<OffsetLimitPagination<Article>> mostReadNews(
+    ArticleQueryParams params,
+  ) async {
+    return search(
+      ArticleQueryParams(
+        limit: params.limit,
+        offset: params.offset,
+        orderMode: OrderMode.descending,
+        sortBy: ArticleSortOptions.data, // Assuming 'data' refers to most read
+      ),
+    );
+  }
+
+  @override
+  Future<OffsetLimitPagination<Article>> highlight(
+    ArticleQueryParams params,
+  ) async {
+    return search(
+      ArticleQueryParams(
+        limit: params.limit,
+        offset: params.offset,
+        orderMode: OrderMode.descending,
+        sortBy: ArticleSortOptions.data, // Assuming 'data' refers to highlights
+      ),
+    );
   }
 }

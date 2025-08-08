@@ -1,7 +1,7 @@
 import 'package:universal_datastores/src/article_datastore/drift_article_datastore.dart';
 import 'package:universal_datastores/src/article_datastore/models/models.dart';
 import 'package:universal_datastores/src/datastore.dart'
-    show OffsetLimitPagination, QueryParams;
+    show OffsetLimitPagination, OrderMode, QueryParams;
 import 'package:universal_datastores/src/exceptions.dart';
 
 export 'package:universal_datastores/src/article_datastore/drift_article_datastore.dart';
@@ -21,14 +21,8 @@ enum ArticleSortOptions {
   /// Sort by update date ascending.
   updatedAt,
 
-  /// Sort by update date descending.
-  updatedAtDesc,
-
   /// Sort by creation date ascending.
   createdAt,
-
-  /// Sort by creation date descending.
-  createdAtDesc,
 }
 
 /// {@template article_query_params}
@@ -37,12 +31,17 @@ enum ArticleSortOptions {
 class ArticleQueryParams extends QueryParams {
   /// {@macro article_query_params}
   const ArticleQueryParams({
+    super.orderMode,
     super.limit,
     super.offset,
     this.sources,
     this.query,
     this.sortBy,
   });
+
+  // static const latestQuery = ArticleQueryParams(
+  //   sortBy: ArticleSortOptions.createdAt,
+  // );
 
   /// The sources to filter by.
   final List<String>? sources;
@@ -96,4 +95,26 @@ abstract class ArticlesDatastore {
 
   /// Searches for articles that match the given query.
   Future<OffsetLimitPagination<Article>> search(ArticleQueryParams params);
+
+  /// Returns the latest news articles.
+  Future<OffsetLimitPagination<Article>> latestNews(ArticleQueryParams params);
+
+  /// Returns popular news articles.
+  Future<OffsetLimitPagination<Article>> popularNews(ArticleQueryParams params);
+
+  /// Returns top news articles.
+  Future<OffsetLimitPagination<Article>> topNews(ArticleQueryParams params);
+
+  /// Returns trending news articles.
+  Future<OffsetLimitPagination<Article>> trendingNews(
+    ArticleQueryParams params,
+  );
+
+  /// Returns most read news articles.
+  Future<OffsetLimitPagination<Article>> mostReadNews(
+    ArticleQueryParams params,
+  );
+
+  /// Returns highlight news articles.
+  Future<OffsetLimitPagination<Article>> highlight(ArticleQueryParams params);
 }
