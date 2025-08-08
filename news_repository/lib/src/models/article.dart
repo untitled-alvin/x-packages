@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:news_repository/src/models/models.dart';
+import 'package:news_repository/src/models/author.dart';
+import 'package:news_repository/src/models/post_type.dart';
 import 'package:news_repository/src/category.dart';
 
 /// {@template article}
@@ -31,7 +32,7 @@ class Article extends Equatable {
   final String content;
 
   /// The article's author.
-  final User author;
+  final Author author;
 
   /// The type of post.
   final PostType postType;
@@ -59,7 +60,7 @@ class Article extends Equatable {
     String? id,
     String? title,
     String? content,
-    User? author,
+    Author? author,
     PostType? postType,
     Category? category,
     String? imageUrl,

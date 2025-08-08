@@ -13,16 +13,16 @@ class InMemoryNewsRepository implements NewsRepository {
     _initialize();
   }
 
-  final List<User> _users = [];
+  final List<Author> _authors = [];
   final List<Article> _articles = [];
 
   void _initialize() {
     // Create mock users
     for (var i = 0; i < 5; i++) {
-      _users.add(
-        User(
+      _authors.add(
+        Author(
           id: 'user_$i',
-          name: 'User $i',
+          name: 'Author $i',
           imageUrl: 'https://picsum.photos/id/${i + 10}/200/200',
         ),
       );
@@ -30,7 +30,7 @@ class InMemoryNewsRepository implements NewsRepository {
 
     // Create mock articles
     for (var i = 0; i < 20; i++) {
-      final author = _users[i % _users.length];
+      final author = _authors[i % _authors.length];
       final category = Category.values[i % Category.values.length];
       final postType = PostType.values[i % PostType.values.length];
 
