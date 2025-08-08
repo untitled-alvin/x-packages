@@ -1,0 +1,36 @@
+
+# Gemini Code Editor Rules for the VGVentures/very_good_engineering Project
+
+This document outlines the rules and conventions for using AI code editors, such as Gemini, within the `vgventures/very_good_engineering` repository. Adhering to these guidelines ensures consistency, quality, and maintainability of the codebase.
+
+## 2. Coding Style and Conventions
+
+- **Linting**: The project uses `very_good_analysis` for linting. All code must adhere to the rules defined in the `analysis_options.yaml` file. Before committing any changes, run `flutter analyze lib test` to ensure there are no linting errors.
+- **Formatting**: All code must be formatted using `flutter format`. Run `flutter format --set-exit-if-changed lib test` before committing to ensure consistent formatting.
+- **Immutability**: Favor immutable data structures wherever possible. Use the `copyWith` method for updating object properties rather than mutating them directly.
+- **Testing**: All new features and bug fixes must be accompanied by tests. The project requires 100% test coverage. Use the `bloc_test` and `mocktail` packages for testing BLoCs and other components.
+- **Documentation**: All public APIs must be documented. Use clear and concise language to describe the purpose and usage of the API.
+
+## 3. Commit Messages
+
+- **Conventional Commits**: All commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification. The following prefixes should be used:
+    - `feat`: A new feature
+    - `fix`: A bug fix
+    - `chore`: A change that is related to dependencies, imports, format changes
+    - `build`: Changes that affect the build system or external dependencies
+    - `ci`: Changes to CI configuration files and scripts
+    - `docs`: Documentation only changes
+    - `perf`: A code change that improves performance
+    - `refactor`: A code change that neither fixes a bug nor adds a feature
+    - `style`: Changes that do not affect the meaning of the code
+    - `test`: Adding missing tests or correcting existing tests
+
+## 4. Dependencies
+
+- **Package Management**: All dependencies are managed in the `pubspec.yaml` file. When adding a new dependency, ensure it is necessary and does not introduce any security vulnerabilities.
+
+## 5. AI Code Editor Usage
+
+- **Code Generation**: When using an AI code editor to generate code, ensure that the generated code adheres to all the rules and conventions outlined in this document.
+- **Code Modification**: Before modifying any existing code, carefully analyze the surrounding code to understand its context and purpose. Ensure that any changes are consistent with the existing style and architecture.
+- **Verification**: After making any changes, run all the necessary checks, including formatting, linting, and testing, to verify that the changes are correct and do not introduce any regressions.
