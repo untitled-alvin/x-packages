@@ -14,6 +14,45 @@ Install via `dart pub add`:
 
 ```sh
 dart pub add universal_datastores
+dart pub add --dev drift_dev
+dart pub add --dev build_runner
+```
+
+## Usage 🚀
+
+Here's a simple example of how to use the `ArticleDatastore` to manage articles in your application:
+
+```dart
+import 'package:universal_datastores/universal_datastores.dart';
+
+void main() async {
+  // Create an instance of the database.
+  final database = ArticleDatabase();
+
+  // Create an instance of the datastore.
+  final articleDatastore = ArticleDatastore(database: database);
+
+  // Create a new article.
+  final article = Article(
+    guid: '1',
+    ownerId: '1',
+    title: 'Hello, World!',
+    content: 'This is my first article.',
+  );
+
+  // Add the article to the datastore.
+  await articleDatastore.put(article);
+
+  // Get the article from the datastore.
+  final retrievedArticle = await articleDatastore.get('1');
+  print(retrievedArticle?.title); // "Hello, World!"
+
+  // Search for articles.
+  final results = await articleDatastore.search(
+    const ArticleQueryParams(query: 'first'),
+  );
+  print(results.data.length); // 1
+}
 ```
 
 ---

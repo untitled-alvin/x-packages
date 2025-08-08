@@ -1,6 +1,10 @@
-/// A powerful, reusable, and easy-to-manage Dart package
-/// for creating and using local database mock data,
-/// speeding up UI development and improving testability.
+/// {@template universal_datastores}
+/// A universal datastore for your Flutter applications.
+/// {@endtemplate}
 library;
 
-export 'src/universal_datastores.dart';
+export 'src/article_datastore/article_datastore.dart';
+export 'src/article_datastore/models/models.dart';
+export 'src/datastore.dart';
+export 'src/value_datastore/drift_value_datastore.dart';
+export 'src/value_datastore/value_datastore.dart';
