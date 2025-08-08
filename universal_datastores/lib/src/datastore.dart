@@ -26,13 +26,26 @@ abstract class Datastore<T> {
   // Future<T> deleteByPrimaryKey(String id);
 }
 
+/// The available sorting option for QueryParams.
+enum OrderMode {
+  /// Sort ascending.
+  ascending,
+
+  /// Sort descending.
+  descending,
+}
+
 /// Base class for query parameters.
 ///
 /// This class encapsulates common query parameters like pagination.
 /// It can be extended to add specific parameters for different data types.
 class QueryParams {
   /// Creates a new instance of [QueryParams].
-  const QueryParams({this.limit, this.offset});
+  const QueryParams({
+    this.limit,
+    this.offset,
+    this.orderMode = OrderMode.ascending,
+  });
 
   /// Default query to select all records.
   static const queryAll = QueryParams();
@@ -42,6 +55,9 @@ class QueryParams {
 
   /// Number of results to skip.
   final int? offset;
+
+  /// Number of results to skip.
+  final OrderMode orderMode;
 }
 
 /// Offset-Limit Pagination Model

@@ -44,20 +44,21 @@ extension on SimpleSelectStatement<$ArticlesTable, ArticleData> {
     ArticleQueryParams params,
   ) {
     query.orderBy([
-      (t) => switch (params.sortBy) {
-        ArticleSortOptions.data => OrderingTerm(expression: t.content),
-        ArticleSortOptions.id => OrderingTerm(expression: t.guid),
-        ArticleSortOptions.updatedAt => OrderingTerm(expression: t.updatedAt),
-        ArticleSortOptions.updatedAtDesc => OrderingTerm(
-          expression: t.updatedAt,
-          mode: OrderingMode.desc,
-        ),
-        ArticleSortOptions.createdAt => OrderingTerm(expression: t.createdAt),
-        ArticleSortOptions.createdAtDesc => OrderingTerm(
-          expression: t.createdAt,
-          mode: OrderingMode.desc,
-        ),
-        _ => OrderingTerm(expression: t.createdAt),
+      (t) {
+        final mode = switch (params.orderMode) {
+          OrderMode.descending => OrderingMode.desc,
+          _ => OrderingMode.asc,
+        };
+
+        final expression = switch (params.sortBy) {
+          ArticleSortOptions.data => t.content,
+          ArticleSortOptions.id => t.guid,
+          ArticleSortOptions.updatedAt => t.updatedAt,
+          ArticleSortOptions.createdAt => t.createdAt,
+          _ => t.createdAt,
+        };
+
+        return OrderingTerm(expression: expression, mode: mode);
       },
     ]);
   }
