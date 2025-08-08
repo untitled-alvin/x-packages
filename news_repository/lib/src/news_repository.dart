@@ -14,6 +14,9 @@ enum SortBy {
 /// A repository that exposes news data.
 /// {@endtemplate}
 abstract class NewsRepository {
+  /// Fetches the latest news from the remote source and caches them locally.
+  Future<void> fetchLatestNews();
+
   /// Returns a list of all news categories.
   Future<List<Category>> getCategories();
 
